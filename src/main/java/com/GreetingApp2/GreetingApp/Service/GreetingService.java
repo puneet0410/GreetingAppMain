@@ -39,32 +39,28 @@ import java.util.Optional;
 //    }
 //}
 
-
 @Service
 public class GreetingService {
 
-    @Autowired
-    private GreetingRepository greetingRepository;
+    private final GreetingRepository greetingRepository;
+
+    public GreetingService(GreetingRepository greetingRepository) {
+        this.greetingRepository = greetingRepository;
+    }
 
     public Greeting saveGreeting(Greeting greeting) {
         return greetingRepository.save(greeting);
     }
 
-    public Optional<Greeting> findGreetingById(Long id) {
+    public Optional<Greeting> getGreetingById(Long id) {
         return greetingRepository.findById(id);
     }
 
-    public List<Greeting> findAllGreetings() {
-        return greetingRepository.findAll();
-    }
-
-    public Greeting updateGreeting(Long id, Greeting greetingDetails) {
-        Greeting greeting = greetingRepository.findById(id).orElseThrow();
-        greeting.setMessage(greetingDetails.getMessage());
-        return greetingRepository.save(greeting);
-    }
-
-    public void deleteGreeting(Long id) {
-        greetingRepository.deleteById(id);
+    public boolean deleteGreeting(Long id) {
+        if (greetingRepository.existsById(id)) {
+            greetingRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

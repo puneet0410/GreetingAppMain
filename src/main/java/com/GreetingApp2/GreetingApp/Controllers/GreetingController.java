@@ -14,43 +14,41 @@ import com.GreetingApp2.GreetingApp.Entity.Greeting;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/greetings")
 public class GreetingController {
 
-    @Autowired
-    private GreetingService greetingService;
+    private final GreetingService greetingService;
 
+    public GreetingController(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
+    // Create Greeting
     @PostMapping
-    public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting newGreeting) {
-        Greeting savedGreeting = greetingService.saveGreeting(newGreeting);
-        URI location = URI.create(String.format("/greetings/%s", savedGreeting.getId()));
-        return ResponseEntity.created(location).body(savedGreeting);
+    public ResponseEntity<Greeting> createGreeting(@RequestBody Greeting greeting) {
+        return ResponseEntity.ok(greetingService.saveGreeting(greeting));
     }
 
+    // Get Greeting by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
-        return greetingService.findGreetingById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Greeting> getGreeting(@PathVariable Long id) {
+        Optional<Greeting> greeting = greetingService.getGreetingById(id);
+        return greeting.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public List<Greeting> getAllGreetings() {
-        return greetingService.findAllGreetings();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Greeting> updateGreeting(@PathVariable Long id, @RequestBody Greeting greetingDetails) {
-        Greeting updatedGreeting = greetingService.updateGreeting(id, greetingDetails);
-        return ResponseEntity.ok(updatedGreeting);
-    }
-
+    // Delete Greeting by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGreeting(@PathVariable Long id) {
-        greetingService.deleteGreeting(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteGreeting(@PathVariable Long id) {
+        boolean deleted = greetingService.deleteGreeting(id);
+        if (deleted) {
+            return ResponseEntity.ok("Greeting with ID " + id + " has been deleted.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 
@@ -73,6 +71,34 @@ public class GreetingController {
 //        "message": "Hello, Sanjana!"
 //        }
 
+
+
+
+
+
+//http://localhost:8080/greetings (POST, GET)
+
+//[
+//        {
+//        "id": 1,
+//        "message": "Hello, Spring Boot!"
+//        },
+//        {
+//        "id": 2,
+//        "message": "Hello, Nomicy!"
+//        },
+//        {
+//        "id": 3,
+//        "message": "Hello, Sanjana!"
+//        }
+//        ]
+
+
+
+//http://localhost:8080/greetings
+//curl -X POST http://localhost:8080/greetings -H "Content-Type: application/json" -d "{\"message\": \"Hello, World!\"}"
+
+//http://localhost:8080/greeting?firstName=Nomicy&lastName=Gupta
 
 
 
