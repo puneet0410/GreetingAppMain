@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
 @Service
 public class EmailService {
 
@@ -21,7 +20,7 @@ public class EmailService {
             helper.setTo(toEmail);
             helper.setSubject(subject);
             helper.setText("Hello " + name + ",\n\n" + messageBody + "\n\nThank you for joining us.", true);
-            helper.setFrom("puneetp2200@gmail.com.com");
+            helper.setFrom("nomicycapg@gmail.com");
 
             mailSender.send(message);
             System.out.println("Email sent successfully to: " + toEmail);
@@ -39,4 +38,6 @@ public class EmailService {
         String messageBody = "You have successfully logged in!\n\nIf this wasn't you, please reset your password immediately.";
         sendEmail(toEmail, name, "‼️Login Alert‼️", messageBody);
     }
+
+
 }
