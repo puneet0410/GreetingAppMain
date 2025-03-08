@@ -99,31 +99,3 @@ public class GreetingController {
 //curl -X POST http://localhost:8080/greetings -H "Content-Type: application/json" -d "{\"message\": \"Hello, World!\"}"
 
 //http://localhost:8080/greeting?firstName=Nomicy&lastName=Gupta
-
-
-
-
-
-//http://localhost:8080/greetings (POST, GET)
-
-//[
-//        {
-//        "id": 1,
-//        "message": "Hello, Spring Boot!"
-//        },
-//        {
-//        "id": 2,
-//        "message": "Hello, Nomicy!"
-//        },
-//        {
-//        "id": 3,
-//        "message": "Hello, Sanjana!"
-//        }
-//        ]
-
-
-
-//http://localhost:8080/greetings
-//curl -X POST http://localhost:8080/greetings -H "Content-Type: application/json" -d "{\"message\": \"Hello, World!\"}"
-
-//http://localhost:8080/greeting?firstName=Nomicy&lastName=Gupta
