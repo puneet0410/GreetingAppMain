@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 // Send email notification
-
 @Service
 public class AuthenticationService {
 
@@ -71,5 +70,36 @@ public class AuthenticationService {
         emailService.sendLoginNotification(user.getEmail(), user.getFirstName());
 
         return new LoginResponseDTO("Login successful!", token);
+    }
+
+    public boolean forgotPassword(String email, String newPassword){
+        Optional<AuthUser> userOptional = authUserRepository.findByEmail(email);
+        if(userOptional.isEmpty()){
+            return false;
+        }
+
+        AuthUser user = userOptional.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        authUserRepository.save(user);
+        emailService.sendEmail(email, user.getFirstName(), "Password Changed", "Your password has been updated successfully.");
+        return true;
+
+    }
+
+    public boolean resetPassword(String email, String currentPassword, String newPassword) {
+        Optional<AuthUser> userOptional = authUserRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        AuthUser user = userOptional.get();
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        authUserRepository.save(user);
+
+        return true;
     }
 }
